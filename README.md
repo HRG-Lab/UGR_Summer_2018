@@ -11,21 +11,21 @@ Before running these commands, you'll want to open git bash and navigate to the 
 ### Setup - these steps only need to be done once
 a. ) [git install link](https://git-scm.com/downloads)- First, make sure you have git installed. Github desktop is different from git, and actually uses git to sync with the repository. On Windows, when the install prompts you, make sure you have git bash selected to give you access to unix commands. 
  
-b. ) `[git clone](https://git-scm.com/docs/git-clone) https://github.com/HRG-Lab/UGR_Summer_2018.git` - This creates a local copy of the repository which is identical to the one stored on github
+b. ) `git clone https://github.com/HRG-Lab/UGR_Summer_2018.git` - [git clone](https://git-scm.com/docs/git-clone) creates a local copy of the repository which is identical to the one stored on github.
 
 
 ### Maintaining the repository - you'll use these commands more regularly. 
 Once you've cloned the repository using *git bash,* you can *cd* (Change directory) into the folder on your computer containing the local copy of this repository. <br>
 Note: <filenames> can also refer to relative file-paths from the repository root directory. 
   
-a.) `[git pull](https://git-scm.com/docs/git-pull)` - pulls the latest changes from the repository backup on Github to your local machine. The easiest way to make sure you aren't erasing someone else's changes is to run git pull each time you start working, and immediately before committing new changes. 
+a.) `git pull` - [git pull](https://git-scm.com/docs/git-pull) *pulls* the latest changes from the repository backup on Github to your local machine. The easiest way to make sure you aren't erasing someone else's changes is to run git pull each time you start working, and immediately before committing new changes. 
 
-b.) `[git status](https://git-scm.com/docs/git-status)` - checks the status of your local repository against the repository backup on github. This should tell you whether you are behind or ahead of the GitHub copy repository. I usually run this between each command I run here. 
+b.) `git status` [git status](https://git-scm.com/docs/git-status) checks the status of your local repository against the repository backup on github. This should tell you whether you are behind or ahead of the GitHub copy repository. I usually run this between each command I run here. 
 
-c.) `[git add](https://git-scm.com/docs/git-add) <filename(s)>` - adds a new file to git's repository tracker. You only need to run this each time you create a new file
+c.) `git add <filename(s)>` - [adds](https://git-scm.com/docs/git-add) a new file to git's repository tracker. You only need to run this each time you create a new file
 
-d.) [git commit](https://git-scm.com/docs/git-commit) <filename(s)> - commit stages changed and newly added files to be uploaded to the repository. Commit will check for any synchronization errors or changes that have been newly added since your last pull
+d.) `git commit <filename(s)>` - [commit](https://git-scm.com/docs/git-commit) stages changed and newly added files to be uploaded to the repository. Commit will check for any synchronization errors or changes that have been newly added since your last pull
 
-e.) `[git push](https://git-scm.com/docs/git-push)` - push uploads all committed changes to the repository. 
+e.) `git push` - [push](https://git-scm.com/docs/git-push) uploads all committed changes to the repository. 
 
-f.) `[git merge](https://git-scm.com/docs/git-merge)` - When someone else's changes have been pushed to the repository since the last time you've pulled, git will force you to do a merge command to reconcile the differences before pushing your changes.  
+f.) `git merge` - When someone else's changes have been pushed to the repository since the last time you've pulled, git will force you to do a [merge](https://git-scm.com/docs/git-merge) command to reconcile the differences before pushing your changes.  
