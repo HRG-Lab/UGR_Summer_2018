@@ -2,7 +2,7 @@
 Repository for Summer 2018 Undergraduate Research Code
 
 
-## Git Quick Start <-- If you are new to GitHub, start here!
+## Git Quick Start <-- If you are new to GitHub, read this first!
 
 I did a little write up on the git commands I usually use to maintain a repository. Git has other features like branches which are useful for larger projects, but since we only have a few people working on this right now, these should be enough. Depending on the settings you used when you installed git, it should come with git bash. Git Bash will allow you to run some unix commands on windows. Git Desktop has most of the same features as the bash prompt, but it does not give you access to all of the advanced commands that git bash does.  Also, the commands seemed more straightforward to me to use than the desktop so I've just stuck with that. 
 
