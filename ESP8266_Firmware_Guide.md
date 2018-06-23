@@ -31,8 +31,8 @@ Chip erase completed successfully in 7.3s
 Hard resetting via RTS pin...
 ```
 - Keep this command prompt open, as we will use the same window for the next step.
-- Download the latest micropython firmware from the micropython website: http://micropython.org/download#esp8266.  It should be listed under the heading "Firware for ESP8266 boards", and look for the .zip file labeled "latest".
-- Extract the downloaded zip file, and find the .bin file hidden a few folders deep.  Copy this file and paste it into the same esptool files folder you used above.
+- Download the latest micropython firmware from the micropython website: http://micropython.org/download#esp8266.  It should be listed under the heading "Firware for ESP8266 boards", and look for the .bin file labeled "latest".
+- After downloading, copy this file and paste it into the same esptool files folder you used above.
 - Go back to the command prompt and type in the following command, but with two changes: Replace the # sign with your COM port number you found above, and replace the FILENAME with the name of the .bin file you just pasted into the folder.
 ```
 esptool.py --port COM# --baud 460800 write_flash --flash_size=detect -fm dio 0 FILENAME.bin
