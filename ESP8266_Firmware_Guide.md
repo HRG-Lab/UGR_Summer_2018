@@ -4,7 +4,7 @@
 
 # Getting the board installed.
 
-- Install drivers for ESP8266 (??)
+- Install drivers for ESP8266 by visiting https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 - Connect the ESP8266 board via a USB cable to your computer.
 - Check which COM port the board is assigned by clicking the Windows start menu and typing "devmgmt.exe".
 - Expand the "Ports (COM & LPT)" section and look for the "Silicon Labs CP210x USB to UART Bridge". At the end of this line it will list the COM port number, take note of this.
