@@ -14,7 +14,15 @@
 The official tutorial can be found at https://docs.micropython.org/en/latest/esp8266/esp8266/tutorial/intro.html for reference, but here is a quick guide:
 - Downlaod the esp tool files at https://github.com/espressif/esptool/ and extract them to a folder.  Keep the folder open in the file browser, because we'll drop another file in here later.
 - In windows, browse to the esptool folder where the files are kept.  In the file browser window, hold down Shift+Ctrl and right click, then select "Open command prompt here.
-- In the command prompt that appears, type "esptool.py" --port COM# erase_flash" where the # sign is the port number you located above.  The output should look like the following:
+- To communicate with the board, we first need to install the python's pyserial module.  In the command prompt that appeared, enter the following command:
+```
+pip install pyserial
+```
+Now we are ready to erase the flash, which is recommended before uploading new firmware. In the same commpand prompt type the following, but change the # sign to the port number you located above.
+```
+esptool.py --port COM# erase_flash
+```
+  The output should look like the following:
 ```
 esptool.py v2.4.1
 Serial port COM13
@@ -31,8 +39,8 @@ Chip erase completed successfully in 7.3s
 Hard resetting via RTS pin...
 ```
 - Keep this command prompt open, as we will use the same window for the next step.
-- Download the latest micropython firmware from the micropython website: http://micropython.org/download#esp8266.  It should be listed under the heading "Firware for ESP8266 boards", and look for the .bin file labeled "latest".
-- After downloading, copy this file and paste it into the same esptool files folder you used above.
+- Download the latest micropython firmware file from the micropython website: http://micropython.org/download#esp8266.  It should be listed under the heading "Firware for ESP8266 boards", and look for the .bin file labeled "latest".
+- After downloading, copy the .bin file from your downloads folder and paste it into the same esptool files folder you used above.
 - Go back to the command prompt and type in the following command, but with two changes: Replace the # sign with your COM port number you found above, and replace the FILENAME with the name of the .bin file you just pasted into the folder.
 ```
 esptool.py --port COM# --baud 460800 write_flash --flash_size=detect -fm dio 0 FILENAME.bin
@@ -61,4 +69,4 @@ Hash of data verified.
 Leaving...
 Hard resetting via RTS pin...
 ```
---You've now loaded the latest micropython firmware to your ESP8266.
+You've now loaded the latest micropython firmware to your ESP8266.
