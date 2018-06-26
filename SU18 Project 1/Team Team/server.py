@@ -54,11 +54,10 @@ def receive_data(conn,sock):
 			avg = conn.recv(16).decode()
 
 			if(inst == 'End of Message' or avg =='End of Message'):
-				# sometimes data will be None, so if there is data, we need to process it
+				# If 'End of message' is received, stop receiving data from client
 				print("Inst: " + inst + ' avg: ' + avg)
 				break
 			else:
-				# If 'End of message' is received, stop receiving data from client
 				mappedInst = convertData(float(inst))
 				mappedAvg = convertData(float(avg))
 				ledData(mappedInst)
