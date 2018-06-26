@@ -19,8 +19,8 @@ The official tutorial can be found at https://docs.pycom.io/chapter/pytrackpysen
 - We will now update the firmware on the Exp Board 3.0
   * Going back to the earlier downloads, unzip dfu-util-0.9-win64.zip. Move the 'dfu-util-0.9-win64' from inside the zipfile to somewhere accessible.
   * Move the firmware update 'expansion3_x.x.x.dfu' into 'dfu-util-0.9-win64'
-  * Open "Command Prompt" by hitting the **windows button + r** and typing "cmd.exe"
-    1. On the command line type "dfu-util-static.exe -D expansion3_x.x.x.dfu"\
+  * Open "Command Prompt" by hitting the `windows button + r` and typing "cmd.exe"
+    1. On the command line type `dfu-util-static.exe -D expansion3_x.x.x.dfu`
     2. Get the board in DFU mode (hold down the **S1** buttonw) and connect the USB.
     3. Hit enter in "Command Prompt". A progress bar will pop up follwed by a line. 
         * If the line read "No error condition is present", then the Exp Board 3.0 has been successfully updated. 
