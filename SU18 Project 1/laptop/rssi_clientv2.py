@@ -220,13 +220,11 @@ try:
                     found = False
                     for graphs in rssi:
                         if graphs[0] == source:
-                            #add a position of the length to see if the
-                            #list has been updated
-                            graphs[1].append(value)
+                            graphs[1].append(value)                            
                             found = True
                             break
                     if not found:
-                        rssi.append([source,[value]])
+                        rssi.append([source,[value], 0])
                 if tag == "stream-data" and value == "ultrasonic":
                     found = False
                     for graphs in ultrasonic:
@@ -235,14 +233,17 @@ try:
                             found = True
                             break
                     if not found:
-                        ultrasonic.append([source,[value]])
+                        ultrasonic.append([source,[value], 0])
             if(plot_start):
                 rssi_plot = plotter([],"")
                 rssi_plot.start()
                 plot_run = True
             if(plot_run):
-                
-            
+                for x in range(0,len(rssi)):
+                    graphs = rssi[x]
+                    if len(graphs[1])-1 > graphs[2]:
+                        rssi_plot.add_value(graphs[1][len(graphs[2])-1])
+                        graphs[2] += 1
 
         except:
             pass
