@@ -39,9 +39,15 @@ class plotter(threading.Thread):
         self.fig.canvas.draw()
         plt.show(block=False)
         plt.pause(self.delay)
-    def add_values(self, values):
+    def add_value(self, value, position):
         for x in range(0,len(values)):
-            self.plot_data[x].append(values[x])
+            if x is position:
+                self.plot_data[x].append(value)
+            else:
+                if len(plot_data[x]) > 1 :
+                    self.plot_data[x].append(plot_data[len(plot_data[x])-1])
+                else:
+                    self.plot_data[x].append(0)
         self.x_data.append(time.time()-self.time_start)
     def run(self):
 
@@ -183,6 +189,8 @@ rssi_num = 0
 rssi = []
 ultrasonic = []
 
+plot_run = False
+
 
 
 plot_start = False
@@ -212,6 +220,8 @@ try:
                     found = False
                     for graphs in rssi:
                         if graphs[0] == source:
+                            #add a position of the length to see if the
+                            #list has been updated
                             graphs[1].append(value)
                             found = True
                             break
@@ -229,14 +239,10 @@ try:
             if(plot_start):
                 rssi_plot = plotter([],"")
                 rssi_plot.start()
-                list_rssi = []
-                for x in range(0,len(rssi)):
-                    if len(rss[x][0]) > 0:
-                        list_rssi.append(rssi[x][0])
-                        del rssi[x][0]
-                    else:
-                        list_rssi.append(0)
-                rssi_plot.add_values(list_rssi)
+                plot_run = True
+            if(plot_run):
+                
+            
 
         except:
             pass
