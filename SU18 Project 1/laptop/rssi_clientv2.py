@@ -3,71 +3,119 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class plotter(threading.Thread):
-    import numpy as np
-    status = True
     plot_data = []
-    plot_data_new = []
-    legend = []
-    li_list = []
-    start_time = time.time()
-    delay = 0.1
     x_data = []
 
-    def __init__(self,data):
-        threading.Thread.__init__(self)
-        self.plot_data = data
-    def start(self):
-        fig = matplotlib.pyplot.figure()
-        ax = fig.add_subplot(111)
-        fig.show()
-        fig.canvas.draw()
-        matplotlib.pyplot.show(block=False)
-        time.sleep(1)
-        while(self.status is True):
-            x_data.append(time.time()-self.start_time)
-            ax.legend(legend_list)
-            for x in range(0,len(self.plot_data)):
-                self.plot_data[x][1].set_xdata(x_data)
-                self.plot_data[x][1].set_ydata(self.plot_data[x][2])
-            #relimit the axes
-            ax.relim()
-            #autoscale the axes
-            ax.autoscale_view(True,True,True)
-            #update the axis
-            fig.canvas.draw()
-            #delay the plot, a annoying but required process
-            matplotlib.pyplot.pause(delay)
-            time.sleep(self.delay)
-            
-    def check_changes(self, plot, plot_new):
-        plot_merge = []
-        new_legend = []
-        for x in range(0,len(plot_new)):
-            in_list = False
-            for stat in plot:
-                if plot_new[x][0] is stat[0]:
-                    in_list = True
-                    plot_merge.append(stat)
-                    new_legend.append(stat[0])
-                    break
-            if not in_list:
-                time_change = [0]*((time.time()-self.start_time)/self.delay)
-                plot_obj = [[],[],[]]
-                rand_color = list(np.random.choice(range(0,100,1), size=3)/100)
-                li, = ax.plot(0,0,color = rand_color)
-                plot_obj[0] = plot_new[0]
-                plot_obj[1] = li
-                plot_obj[2].append(time_change)
-                plot_obj[2].append(plot_new[1])
-                plot_merge.append(plot_obj)
-                new_legend.append(plot_obj[0])
-        self.plot_data = plot_merge
+    delay = 0.01
 
-    def set_plot_data(self,plot):
-        self.plot_data_new = plot
-        self.check_changes(self.plot_data, self.plot_data_new)
-    def stop(self):
-        self.status = False
+    fig = None
+    ax = None
+
+    li_objs = []
+
+    time_start = None
+
+    
+
+    def random_color(self):
+        return list(np.random.choice(range(0,100,1), size=3)/100)
+
+    def __init__(self, num_plots, names):
+        threading.Thread.__init__(self)
+
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+
+        for x in range(num_plots):
+            li, = self.ax.plot(0,0,color = self.rand_color())
+            li_objs.append(li)
+
+        self.ax.legend(names)
+        
+        time_start = time.time()
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+        self.fig.show()
+        self.fig.canvas.draw()
+        plt.show(block=False)
+        plt.pause(self.delay)
+    def add_values(self, values):
+        for x in range(0,len(values)):
+            self.plot_data[x].append(values[x])
+        self.x_data.append(time.time()-self.time_start)
+    def run(self):
+
+        for li_obj in li_objs:
+            li_obj.set_xdata(self.x_data)
+        for plots in plot_data:
+            li_obj.set_ydata(plot)
+        
+        #relimit the axes
+        self.ax.relim()
+        #autoscale the axes
+        self.ax.autoscale_view(True,True,True)
+        #update the axis
+        self.fig.canvas.draw()
+        #delay the plot, a annoying but required process
+        plt.pause(self.delay)
+        time.sleep(self.delay)
+
+
+class thread_command(threading.Thread):
+
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def main(self):
+        global plot_start
+        while True:
+            key_press = ord(msvcrt.getch())
+            print(key_press)
+            if key_press is 112:
+                plot_start = True
+                print("plot started")
+            if key_press is 114:
+                print("Press A to add or R to remove :: ")
+                print("Currently Connected")
+                print("-------------------")
+                for x in range(0,len(rssi)):
+                    print(x," ",rssi[x][0])
+                key_press = ord(msvcrt.getch())
+                if(key_press is 97):
+                    ip = input("Enter IP of rssi client :: ")
+                    self.stream_request(sock,source, ip,"rssi","True")
+                if(key_press is 114):
+                    try:
+                        num = input("Enter the number to remove :: ")
+                        self.stream_request(sock,source, ip,"rssi","False")
+                        del rssi[num]
+                    except:
+                        print("Error, please try again")
+            if key_press is 117:
+                print("Press A to add or R to remove :: ")
+                print("Currently Connected")
+                print("-------------------")
+                for x in range(0,len(rssi)):
+                    print(x," ",ultrasonic[x][0])
+                key_press = ord(msvcrt.getch())
+                if(key_press is 97):
+                    ip = input("Enter IP of ultrasonic client :: ")
+                    self.stream_request(sock,source, ip,"ultrasonic","True")
+                if(key_press is 114):
+                    try:
+                        num = input("Enter the number to remove :: ")
+                        self.stream_request(sock,source, ip,"ultrasonic","False")
+                        del ultrasonic[num]
+                    except:
+                        print("Error, please try again")
+    def stream_request(self, sock,source, destination,label,data):
+        tag = "stream-request"
+        header = str(destination)+","+str(source)+","+str(tag)
+        message = header+"+"+str(label)+"+"+str(data)+";"
+        message = bytes(message.encode('utf-8'))
+        msg = struct.pack('>I', len(message)) + message 
+        sock.sendall(msg)
 
 def decompose_header(header):
 	destination = header[:header.index(",")]
@@ -108,20 +156,14 @@ def unpack(data,delimiter_sub,delimiter_break):
         data_values.append(data[:data.index(delimiter_break)])
         data = data[data.index(delimiter_break)+1:]
     return [data_header,data_labels,data_values]
-def stream_request(sock,source, destination,label,data):
-    tag = "stream-request"
-    header = str(destination)+","+str(source)+","+str(tag)
-    message = header+"+"+str(label)+"+"+str(data)+";"
-    message = bytes(message.encode('utf-8'))
-    msg = struct.pack('>I', len(message)) + message 
-    sock.sendall(msg)
+
 
 lock = threading.Lock()
 
 #server socket setup (client)
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-address = "192.168.4.8"
+address = "192.168.4.2"
 
 port = 324
 print("hello?")
@@ -129,14 +171,21 @@ server_address = (address, port)
 print("hello2")
 sock.connect(server_address)
 print("hello3")
-source = "192.168.4.2"
+source = "192.168.4.3"
 
 sock.setblocking(0)
 
+tc = thread_command()
+tc.start()
+
+
+rssi_num = 0
 rssi = []
 ultrasonic = []
 
 
+
+plot_start = False
 
 try:
     while True:
@@ -162,7 +211,7 @@ try:
                 if tag == "stream-data" and value == "rssi":
                     found = False
                     for graphs in rssi:
-                        if graphs[0] is source:
+                        if graphs[0] == source:
                             graphs[1].append(value)
                             found = True
                             break
@@ -171,51 +220,27 @@ try:
                 if tag == "stream-data" and value == "ultrasonic":
                     found = False
                     for graphs in ultrasonic:
-                        if graphs[0] is source:
+                        if graphs[0] == source:
                             graphs[1].append(value)
                             found = True
                             break
                     if not found:
                         ultrasonic.append([source,[value]])
+            if(plot_start):
+                rssi_plot = plotter([],"")
+                rssi_plot.start()
+                list_rssi = []
+                for x in range(0,len(rssi)):
+                    if len(rss[x][0]) > 0:
+                        list_rssi.append(rssi[x][0])
+                        del rssi[x][0]
+                    else:
+                        list_rssi.append(0)
+                rssi_plot.add_values(list_rssi)
 
         except:
             pass
-        key_press = ord(msvcrt.getch())
-        print(key_press)
-        if key_press is 114:
-            print("Press A to add or R to remove :: ")
-            print("Currently Connected")
-            print("-------------------")
-            for x in range(0,len(rssi)):
-                print(x," ",rssi[x][0])
-            key_press = ord(msvcrt.getch())
-            if(key_press is 97):
-                ip = input("Enter IP of rssi client :: ")
-                stream_request(sock,source, ip,"rssi","True")
-            if(key_press is 114):
-                try:
-                    num = input("Enter the number to remove :: ")
-                    stream_request(sock,source, ip,"rssi","False")
-                    del rssi[num]
-                except:
-                    print("Error, please try again")
-        if key_press is 117:
-            print("Press A to add or R to remove :: ")
-            print("Currently Connected")
-            print("-------------------")
-            for x in range(0,len(rssi)):
-                print(x," ",ultrasonic[x][0])
-            key_press = ord(msvcrt.getch())
-            if(key_press is 97):
-                ip = input("Enter IP of ultrasonic client :: ")
-                stream_request(sock,source, ip,"ultrasonic","True")
-            if(key_press is 114):
-                try:
-                    num = input("Enter the number to remove :: ")
-                    stream_request(sock,source, ip,"ultrasonic","False")
-                    del ultrasonic[num]
-                except:
-                    print("Error, please try again")
+        
 except Exception as e:
     print("Fatal Error ",e)
     traceback.print_exc()

@@ -126,11 +126,12 @@ class switchboard(threading.Thread):
 						print("hold up has value")
 						[dest, source, tag] = self.decompose_header(client_data[0][0])
 						label = client_data[1][0]
-						data = bool(client_data[2])
-						print(data)
+						
 						print(label)
 						print(tag)
 						if(tag == "stream-request"):
+							data = bool(client_data[2])
+							print(data)
 							print("stream-request")
 							in_stream = False
 							for contents in self.stream:
@@ -147,7 +148,7 @@ class switchboard(threading.Thread):
 							#this service is not currently being requested from this client, so start a new service
 							print("instream",in_stream)
 							if not in_stream and data is True:
-								self.stream.append([label,dest,source])
+								self.stream.append([label,dest,[source]])
 								print("creating new stream")
 								for client in self.clients:
 									print(client.address)
@@ -157,25 +158,29 @@ class switchboard(threading.Thread):
 										#print("packet sent",dest,client.address)
 										break
 						if(tag == "stream-data"):
+							data = client_data[2][0]
 							#[service,source,destination] - stream
 							print("looking for forward data")
 							for x in range(0,len(self.stream)):
 								stream_service = self.stream[x][0]
 								stream_source = self.stream[x][1]
 								stream_dest = self.stream[x][2]
-								if(stream_source is source and label is stream_service):
+								print("STREAM LOOKOUT")
+								print(stream_service+" "+stream_source+" "+str(stream_dest))
+								print(label+" "+source)
+								if(stream_source == source and label == stream_service):
 									client_destinations = stream_dest
 									print(client_destinations)
-									for x in range(0,len(client_destinations)):
+									for x in range(0,len([client_destinations])):
 										print("destination",client_destinations[x])
 										for client_object in self.clients:
-											if client_destinations[x] is client_object.address:
+											if client_destinations[x] == client_object.address:
 												#sending the stream packet to the client
 												print("client found, forwarding packet")
-												self.stream_packet(client_destinations[x],stream_source,tag,label,data,client.socket)
+												self.stream_packet(client_destinations[x],stream_source,tag,label,data,client.connection)
 						if(tag == "forward"):
 							for client_object in self.clients:
-								if(client_object.address is dest):
+								if(client_object.address == dest):
 									self.single_packet_forward(source,dest,tag,label,data,client_object)
 			else:
 				time.sleep(0.001)
@@ -187,7 +192,13 @@ class switchboard(threading.Thread):
 		sock.sendall(msg)
 
 	def stream_packet(self, destination, source, tag, label, data, sock):
-		header = dest+","+source+","+tag
+		print(destination)
+		print(source)
+		print(tag)
+		print(label)
+		print(data)
+		header = destination+","+source+","+tag
+		print(header)
 		message = header+"+"+label+"+"+data+";"
 		message = bytes(message.encode('utf-8'))
 		msg = struct.pack('>I', len(message)) + message 
@@ -200,7 +211,8 @@ class switchboard(threading.Thread):
 		message = header+"+"+label+"+"+str(data)+";"
 		print(message)
 		message = bytes(message.encode('utf-8'))
-		msg = struct.pack('>I', len(message)) + message 
+		msg = struct.pack('>I', len(message)) + message
+		print(msg)
 		sock.sendall(msg)
 		print("packet sent")
 	def decompose_header(self, header):
